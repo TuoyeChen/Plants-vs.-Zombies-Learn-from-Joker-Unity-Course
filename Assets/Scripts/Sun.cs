@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Sun : MonoBehaviour
@@ -38,5 +39,30 @@ public class Sun : MonoBehaviour
     private void DestroySun()
     {
         Destroy(gameObject);
+    }
+
+    void OnMouseDown()
+    {
+        GameManager.Instance.SunNum += 50;
+        var tempPos = Camera.main.ScreenToWorldPoint(UIManager.Instance.GetSunIconPos());
+        tempPos.z = 0;
+        FlyAnimation(tempPos);
+    }
+
+    private void FlyAnimation(Vector3 pos)
+    {
+        // 启动协程
+        StartCoroutine(DoFly(pos));
+    }
+
+    private IEnumerator DoFly(Vector3 pos)
+    {
+        Vector3 direction = (pos - transform.position).normalized;
+        while (Vector3.Distance(transform.position, pos) > 0.5f)
+        {
+            yield return new WaitForSeconds(0.01f);
+            transform.Translate(direction);
+        }
+        DestroySun();
     }
 }
