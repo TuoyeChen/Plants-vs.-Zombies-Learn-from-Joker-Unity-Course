@@ -29,12 +29,9 @@ public class SkySunManager : MonoBehaviour
     /// </summary>
     private float _sumDownMinPosY = -3.7f;
 
-    private GameObject _SunPrefab;
-
     // Start is called before the first frame update
     void Start()
     {
-        _SunPrefab = Resources.Load<GameObject>("Sun");
         InvokeRepeating(nameof(CreateSun), 3, 3);
     }
 
@@ -44,11 +41,15 @@ public class SkySunManager : MonoBehaviour
     void CreateSun()
     {
         // 生成阳光
-        Sun sun = Instantiate(_SunPrefab, Vector3.zero, Quaternion.identity, transform)
+        Sun sun = Instantiate(
+                GameManager.Instance.SunPrefab,
+                Vector3.zero,
+                Quaternion.identity,
+                transform
+            )
             .GetComponent<Sun>();
         float sunDownY = Random.Range(_sumDownMinPosY, _sunDownMaxPosY);
         float createX = Random.Range(_createSunMinPosX, _createSunMaxPosX);
         sun.InitForSky(sunDownY, createX, _createSunPosY);
     }
-
 }

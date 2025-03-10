@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    public GameObject SunPrefab { get; private set; }
+
     private int _sunNum;
 
     public int SunNum
@@ -22,6 +24,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        SunPrefab = Resources.Load<GameObject>("Sun");
     }
 
     void Start()

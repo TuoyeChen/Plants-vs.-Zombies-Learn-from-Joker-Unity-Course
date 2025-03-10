@@ -8,12 +8,16 @@ public class Sun : MonoBehaviour
     private float _downTargetPosY;
     private bool _destroyInvoked = false;
 
+    public bool isFormSky;
+
     // Start is called before the first frame update
     void Start() { }
 
     // Update is called once per frame
     void Update()
     {
+        if (!isFormSky)
+            return;
         if (transform.position.y <= _downTargetPosY)
         {
             if (!_destroyInvoked)
@@ -34,6 +38,7 @@ public class Sun : MonoBehaviour
 
         // 设置阳光掉落后的目标高度
         _downTargetPosY = downTargetPosY;
+        isFormSky = true;
     }
 
     private void DestroySun()
@@ -64,5 +69,37 @@ public class Sun : MonoBehaviour
             transform.Translate(direction);
         }
         DestroySun();
+    }
+
+    public void JumpAnimation()
+    {
+        isFormSky = false;
+        // 启动协程
+        StartCoroutine(DoJump());
+    }
+
+    private IEnumerator DoJump()
+    {
+        bool isLeft = Random.Range(0, 2) == 0;
+        Vector3 startPos = transform.position;
+        float x;
+        if (isLeft)
+        {
+            x = -0.01f;
+        }
+        else
+        {
+            x = 0.01f;
+        }
+        while (transform.position.y <= startPos.y + 1)
+        {
+            yield return new WaitForSeconds(0.005f);
+            transform.Translate(new Vector3(x, 0.05f, 0));
+        }
+        while (transform.position.y >= startPos.y)
+        {
+            yield return new WaitForSeconds(0.005f);
+            transform.Translate(new Vector3(x, -0.05f, 0));
+        }
     }
 }
